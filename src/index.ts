@@ -1,7 +1,7 @@
 import express from 'express'
 import usersRouter from './routes/users.routes'
 import databaseService from './services/database.services'
-import { defaultErrorHandler } from './middlewares/error.midleware'
+import { defaultErrorHandler } from './middlewares/error.middlewares'
 
 //  Kết nối database
 databaseService.connect()
