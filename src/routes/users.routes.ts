@@ -8,6 +8,7 @@ import {
   getProfileController,
   loginController,
   logoutController,
+  oauthController,
   refreshController,
   registerController,
   resendVerifyEmailController,
@@ -36,8 +37,21 @@ import { UpdateMeReqBody } from '~/models/requests/User.requests'
 import { wrapRequestHandler } from '~/utils/handlers'
 
 const usersRouter = Router()
-
+/**
+ * Description: User login
+ * Path: /login
+ * Method: POST
+ * Body:{ email: string, password: string }
+ */
 usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
+/**
+ * Description: Login with google oauth
+ * Path: /oauth/google
+ * Method: GET
+ * Body:{ email: string }
+ * Query: { code: string}
+ */
+usersRouter.get('/oauth/google', wrapRequestHandler(oauthController))
 usersRouter.post('/register', registerValidator, wrapRequestHandler(registerController))
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler(logoutController))
 usersRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshController))
