@@ -14,8 +14,9 @@ config()
 initFolder()
 
 //  Kết nối database
-databaseService.connect()
-
+databaseService.connect().then(() => {
+  databaseService.indexUsers()
+})
 // Khởi tại server
 const app = express()
 
