@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { serveImageController, serveVideoStreamController } from '~/controllers/medias.controller'
+import { serveImageController, serveVideoStreamController } from '~/controllers/medias.controllers'
 
 const staticsRouter = Router()
 

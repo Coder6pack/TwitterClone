@@ -7,6 +7,7 @@ import { initFolder } from './utils/file'
 import { config } from 'dotenv'
 import staticsRouter from './routes/statics.routes'
 import { UPLOAD_VIDEO_DIR } from './constants/dir'
+import tweetsRouter from './routes/tweets.routes'
 
 config()
 
@@ -16,6 +17,8 @@ initFolder()
 //  Kết nối database
 databaseService.connect().then(() => {
   databaseService.indexUsers()
+  databaseService.indexRefreshToken()
+  databaseService.indexFollowers()
 })
 // Khởi tại server
 const app = express()
@@ -27,6 +30,7 @@ app.use(express.json())
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
 app.use('/statics', staticsRouter)
+app.use('/tweets', tweetsRouter)
 app.use('/statics/video', express.static(UPLOAD_VIDEO_DIR))
 
 // Handle Error mặc định của app

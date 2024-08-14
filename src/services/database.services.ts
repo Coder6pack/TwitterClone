@@ -29,10 +29,30 @@ class DatabaseService {
     }
   }
 
-  indexUsers() {
-    this.users.createIndex({ email: 1, password: 1 })
-    this.users.createIndex({ email: 1 }, { unique: true })
-    this.users.createIndex({ username: 1 }, { unique: true })
+  async indexUsers() {
+    const exits = await this.users.indexExists(['email_1_password_1', 'email_1', 'username_1'])
+    if (!exits) {
+      this.users.createIndex({ email: 1, password: 1 })
+      this.users.createIndex({ email: 1 }, { unique: true })
+      this.users.createIndex({ username: 1 }, { unique: true })
+    }
+  }
+  async indexRefreshToken() {
+    const exits = await this.refresh_tokens.indexExists(['token_1', 'exp_1'])
+    if (!exits) {
+      this.refresh_tokens.createIndex({ token: 1 })
+      this.refresh_tokens.createIndex({ exp: 1 }, { expireAfterSeconds: 0 })
+    }
+  }
+  // indexVideoStatus(){
+  //   this.indexVideoStatus.createIndex({name:1})
+  // }
+
+  async indexFollowers() {
+    const exits = await this.followers.indexExists(['user_id_1_followed_user_id_1'])
+    if (!exits) {
+      this.followers.createIndex({ user_id: 1, followed_user_id: 1 })
+    }
   }
 
   // Tạo phương thức getter lấy collection users
