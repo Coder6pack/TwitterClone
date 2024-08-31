@@ -160,7 +160,6 @@ class UsersService {
       user_id: user_id.toString(),
       verify: UserVerifyStatus.Unverified
     })
-    console.log(1)
     await databaseService.users.insertOne(
       new User({
         ...payload,
@@ -180,7 +179,7 @@ class UsersService {
     await databaseService.refresh_tokens.insertOne(
       new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token, iat, exp })
     )
-    console.log('email verify token: ', email_verify_token)
+    console.log('email verify token:', email_verify_token)
     return {
       access_token: access_token,
       refresh_token: refresh_token

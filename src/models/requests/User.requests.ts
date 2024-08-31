@@ -1,7 +1,6 @@
 import { JwtPayload } from 'jsonwebtoken'
 import { TokenType, UserVerifyStatus } from '~/constants/enum'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { extend } from 'lodash'
 export interface RegisterReqBody {
   name: string
   email: string

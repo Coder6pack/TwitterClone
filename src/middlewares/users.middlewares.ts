@@ -358,7 +358,7 @@ export const emailVerifyTokenValidator = validate(
             }
             const decoded_email_verify_token = await verifyToken({
               token: value,
-              secretOrPublicKey: process.env.JWT_SECRET_REFRESH_TOKEN as string
+              secretOrPublicKey: process.env.JWT_SECRET_VERIFY_EMAIL_TOKEN as string
             })
 
             ;(req as Request).decoded_email_verify_token = decoded_email_verify_token
