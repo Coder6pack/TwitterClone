@@ -10,6 +10,7 @@ import { UPLOAD_VIDEO_DIR } from './constants/dir'
 import tweetsRouter from './routes/tweets.routes'
 import bookmarksRouter from './routes/bookmarks.routes'
 import likesRouter from './routes/likes.routes'
+import searchRouter from './routes/search.routes'
 // import '~/utils/fake'
 
 config()
@@ -22,6 +23,7 @@ databaseService.connect().then(() => {
   databaseService.indexUsers()
   databaseService.indexRefreshToken()
   databaseService.indexFollowers()
+  databaseService.indexTweets()
 })
 // Khởi tại server
 const app = express()
@@ -36,6 +38,7 @@ app.use('/statics', staticsRouter)
 app.use('/tweets', tweetsRouter)
 app.use('/bookmarks', bookmarksRouter)
 app.use('/likes', likesRouter)
+app.use('/search', searchRouter)
 app.use('/statics/video', express.static(UPLOAD_VIDEO_DIR))
 
 // Handle Error mặc định của app
