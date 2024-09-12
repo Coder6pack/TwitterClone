@@ -5,6 +5,7 @@ import Tweet from '~/models/schemas/Tweet.schema'
 import { ObjectId, WithId } from 'mongodb'
 import Hashtag from '~/models/schemas/Hashtag.schema'
 import { TweetType } from '~/constants/enum'
+import { isEmpty } from 'lodash'
 
 config()
 
@@ -490,7 +491,7 @@ class TweetService {
       newFeed.updated_at = date
       newFeed.user_views += 1
     })
-    return { newFeeds, total: total[0].total }
+    return { newFeeds, total: !isEmpty(total) ? Number(total[0].total) : 0 }
   }
 }
 

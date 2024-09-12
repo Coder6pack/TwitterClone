@@ -2,7 +2,7 @@ import { config } from 'dotenv'
 import databaseService from './database.services'
 import { ObjectId } from 'mongodb'
 import Tweet from '~/models/schemas/Tweet.schema'
-import { MediaType, MediaTypeQuery, TweetType } from '~/constants/enum'
+import { MediaType, MediaTypeQuery, PeopleFollowQuery, TweetType } from '~/constants/enum'
 import { isEmpty } from 'lodash'
 
 config()
@@ -12,15 +12,17 @@ class SearchServices {
     limit,
     page,
     user_id,
-    media_type
+    media_type,
+    people_follow
   }: {
     content: string
     limit: number
     page: number
     user_id: string
-    media_type: MediaTypeQuery
+    media_type?: MediaTypeQuery
+    people_follow?: PeopleFollowQuery
   }) {
-    const filterMatch: any = {
+    const $match: any = {
       $text: {
         $search: content
       }
@@ -28,16 +30,38 @@ class SearchServices {
 
     if (media_type) {
       if (media_type === MediaTypeQuery.Image) {
-        filterMatch['medias.type'] = MediaType.Image
+        $match['medias.type'] = MediaType.Image
       } else if (media_type === MediaTypeQuery.Video) {
-        filterMatch['medias.type'] = MediaType.Video
+        $match['medias.type'] = MediaType.Video
+      }
+    }
+
+    if (people_follow && people_follow === PeopleFollowQuery.Following) {
+      const user_id_obj = new ObjectId(user_id)
+      const followed_user_ids = await databaseService.followers
+        .find(
+          {
+            user_id: user_id_obj
+          },
+          {
+            projection: {
+              followed_user_id: 1,
+              _id: 0
+            }
+          }
+        )
+        .toArray()
+      const ids = followed_user_ids.map((item) => item.followed_user_id)
+      ids.push(user_id_obj)
+      $match['user_id'] = {
+        $in: ids
       }
     }
     const [newFeeds, total] = await Promise.all([
       databaseService.tweets
         .aggregate([
           {
-            $match: filterMatch
+            $match
           },
           {
             $lookup: {
@@ -195,7 +219,7 @@ class SearchServices {
       databaseService.tweets
         .aggregate([
           {
-            $match: filterMatch
+            $match
           },
           {
             $lookup: {
