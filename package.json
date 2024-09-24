@@ -48,6 +48,11 @@
     "mime": "^4.0.4",
     "minimist": "^1.2.8",
     "mongodb": "^6.8.0",
-    "sharp": "^0.33.4"
+    "sharp": "^0.33.4",
+    "socket.io": "^4.7.5"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.8",
+    "utf-8-validate": "^6.0.4"
   }
 }

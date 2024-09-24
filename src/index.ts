@@ -11,6 +11,8 @@ import tweetsRouter from './routes/tweets.routes'
 import bookmarksRouter from './routes/bookmarks.routes'
 import likesRouter from './routes/likes.routes'
 import searchRouter from './routes/search.routes'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
 // import '~/utils/fake'
 
 config()
@@ -27,6 +29,7 @@ databaseService.connect().then(() => {
 })
 // Khởi tại server
 const app = express()
+const httpServer = createServer(app)
 
 // Khởi tạo port localhost
 const port = process.env.PORT || 4000
@@ -41,8 +44,22 @@ app.use('/likes', likesRouter)
 app.use('/search', searchRouter)
 app.use('/statics/video', express.static(UPLOAD_VIDEO_DIR))
 
+const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000'
+  }
+})
+
+io.on('connection', (socket) => {
+  console.log(`user ${socket.id} connected`)
+
+  socket.on('disconnect', () => {
+    console.log(`user ${socket.id} disconnected`)
+  })
+})
+
 // Handle Error mặc định của app
 app.use(defaultErrorHandler)
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`listening on port ${port}`)
 })
